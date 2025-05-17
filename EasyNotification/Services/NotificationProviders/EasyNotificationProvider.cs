@@ -8,6 +8,7 @@ using ClassIsland.Core.Models.Notification;
 using MaterialDesignThemes.Wpf;
 using ClassIsland.Core.Abstractions.Services.NotificationProviders;
 using ClassIsland.Core.Attributes;
+using ClassIsland.Core.Models.UriNavigation;
 
 
 namespace EasyNotification.Services.NotificationProviders;
@@ -26,40 +27,40 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
         NotificationHostService = notificationHostService;
         NotificationHostService.RegisterNotificationProvider(this);
         Logger = logger;
-        uriNavigationService.HandlePluginsNavigation(
-        "easynotification/",
-        args =>
+        uriNavigationService.HandlePluginsNavigation("easynotification/",Handler);
+    }
+
+    private void Handler(UriNavigationEventArgs args)
+    {
+        string query = args.Uri.Query;
+        var queryParams = HttpUtility.ParseQueryString(query);
+        if (queryParams != null)
         {
-            string query = args.Uri.Query;
-            var queryParams = HttpUtility.ParseQueryString(query);
-            if (queryParams != null)
+            string dirValue = queryParams["dir"] ?? "";
+            //Console.WriteLine(dirValue);
+            Logger.LogDebug("传入的提醒配置文件路径为：\"{}\"", dirValue);
+            if (System.IO.File.Exists(dirValue))
             {
-                string dirValue = queryParams["dir"] ?? "";
-                //Console.WriteLine(dirValue);
-                Logger.LogDebug("传入的提醒配置文件路径为：\"{}\"", dirValue);
-                if (System.IO.File.Exists(dirValue))
+                try
                 {
-                    try
-                    {
-                        Settings = ConfigureFileHelper.LoadConfigUnWrapped<Settings>(dirValue, false, false);
-                        ShowNotification(BuildNotification());
-                    }
-                    catch
-                    {
-                        Logger.LogWarning("提醒设置文件加载失败，将忽略本次提醒请求。");
-                    }
+                    Settings = ConfigureFileHelper.LoadConfigUnWrapped<Settings>(dirValue, false, false);
+                    ShowNotification(BuildNotification());
                 }
-                else
+                catch
                 {
-                    Logger.LogWarning("不存在的路径：\"{}\"，将忽略本次提醒请求。", dirValue);
+                    Logger.LogWarning("提醒设置文件加载失败，将忽略本次提醒请求。");
                 }
             }
             else
             {
-                Logger.LogWarning("无效的 Uri 参数：\"{}\"，将忽略本次提醒请求。", args.Uri);
+                Logger.LogWarning("不存在的路径：\"{}\"，将忽略本次提醒请求。", dirValue);
             }
+        }
+        else
+        {
+            Logger.LogWarning("无效的 Uri 参数：\"{}\"，将忽略本次提醒请求。", args.Uri);
+        }
 
-        });
     }
 
     private NotificationRequest BuildNotification()
