@@ -65,7 +65,7 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
 
     private NotificationRequest BuildNotification()
     {
-        var onNotificationRequest = new NotificationRequest()
+        var NotificationRequest = new NotificationRequest()
         {
             MaskContent = NotificationContent.CreateSimpleTextContent(Settings.MaskContent),
             OverlayContent = NotificationContent.CreateSimpleTextContent(Settings.OverlayContent),
@@ -79,7 +79,7 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
             }
 
         };
-        return onNotificationRequest;
+        return NotificationRequest;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
