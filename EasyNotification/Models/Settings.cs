@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-
-namespace EasyNotification.Models;
+﻿namespace EasyNotification.Models;
 
 public class Settings
 {

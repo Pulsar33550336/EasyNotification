@@ -1,20 +1,13 @@
 ﻿using ClassIsland.Core.Abstractions.Services;
-using ClassIsland.Shared.Interfaces;
 using Microsoft.Extensions.Hosting;
-using ClassIsland.Core.Controls.CommonDialog;
 using ClassIsland.Shared.Helpers;
 using System.Web;
-using System;
 using Microsoft.Extensions.Logging;
 using EasyNotification.Models;
 using ClassIsland.Core.Models.Notification;
-using System.Windows.Controls;
-using System.Windows;
-using System.Windows.Documents;
 using MaterialDesignThemes.Wpf;
 using ClassIsland.Core.Abstractions.Services.NotificationProviders;
 using ClassIsland.Core.Attributes;
-using System.IO;
 
 
 namespace EasyNotification.Services.NotificationProviders;
