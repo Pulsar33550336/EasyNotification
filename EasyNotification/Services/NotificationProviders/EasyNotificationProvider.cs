@@ -26,34 +26,29 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
         NotificationHostService = notificationHostService;
         NotificationHostService.RegisterNotificationProvider(this);
         Logger = logger;
-        uriNavigationService.HandlePluginsNavigation("easynotification/",HandlerSimple);
+        uriNavigationService.HandlePluginsNavigation("easynotification/",Handler);
     }
 
-    private void HandlerSimple(UriNavigationEventArgs args)
+    private void Handler(UriNavigationEventArgs args)
     {
         string query = args.Uri.Query;
         var queryParams = HttpUtility.ParseQueryString(query);
         if (queryParams != null)
         {
             string dirValue = queryParams["dir"] ?? "";
+            string type = queryParams["type"] ?? "simple";
             //Console.WriteLine(dirValue);
             Logger.LogDebug("传入的提醒配置文件路径为：\"{}\"", dirValue);
-            if (System.IO.File.Exists(dirValue))
+            switch (type) 
             {
-                try
-                {
-                    Settings = ConfigureFileHelper.LoadConfigUnWrapped<Settings>(dirValue, false, false);
-                    ShowNotification(BuildNotification());
-                }
-                catch
-                {
-                    Logger.LogWarning("提醒设置文件加载失败，将忽略本次提醒请求。");
-                }
+                case "simple":
+                    SimpleNotification(dirValue); 
+                    break;
+                case "rolling":
+                    RollingNotification(dirValue);
+                    break;
             }
-            else
-            {
-                Logger.LogWarning("不存在的路径：\"{}\"，将忽略本次提醒请求。", dirValue);
-            }
+            
         }
         else
         {
@@ -61,23 +56,71 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
         }
 
     }
-
-    private NotificationRequest BuildNotification()
+    
+    private void SimpleNotification(string dirValue)
     {
-        var NotificationRequest = new NotificationRequest()
+        if(System.IO.File.Exists(dirValue))
         {
-            MaskContent = NotificationContent.CreateTwoIconsMask(Settings.MaskContent,PackIconKind.BellOutline,0,false),
-            OverlayContent = NotificationContent.CreateSimpleTextContent(Settings.OverlayContent),
-            RequestNotificationSettings =
+            try
             {
-                IsSettingsEnabled = true,
-                IsSpeechEnabled = Settings.IsSpeechEnabled,
-                IsNotificationEffectEnabled = Settings.IsEffectEnabled,
-                IsNotificationSoundEnabled = Settings.IsSoundEnabled,
-                IsNotificationTopmostEnabled = Settings.IsTopmost
+                Settings = ConfigureFileHelper.LoadConfigUnWrapped<Settings>(dirValue, false, false);
+                var NotificationRequest = new NotificationRequest()
+                {
+                    MaskContent = NotificationContent.CreateTwoIconsMask(Settings.MaskContent, PackIconKind.BellOutline, 0, false),
+                    OverlayContent = NotificationContent.CreateSimpleTextContent(Settings.OverlayContent),
+                    RequestNotificationSettings =
+                    {
+                        IsSettingsEnabled = true,
+                        IsSpeechEnabled = Settings.IsSpeechEnabled,
+                        IsNotificationEffectEnabled = Settings.IsEffectEnabled,
+                        IsNotificationSoundEnabled = Settings.IsSoundEnabled,
+                        IsNotificationTopmostEnabled = Settings.IsTopmost
+                    }
+                };
+                ShowNotification(NotificationRequest);
             }
-        };
-        return NotificationRequest;
+            catch
+            {
+                Logger.LogWarning("提醒设置文件加载失败，将忽略本次提醒请求。");
+            }
+        }
+        else
+        {
+            Logger.LogWarning("不存在的路径：\"{}\"，将忽略本次提醒请求。", dirValue);
+        }
+    }
+
+    private void RollingNotification(string dirValue)
+    {
+        if (System.IO.File.Exists(dirValue))
+        {
+            try
+            {
+                Settings = ConfigureFileHelper.LoadConfigUnWrapped<Settings>(dirValue, false, false);
+                var NotificationRequest = new NotificationRequest()
+                {
+                    MaskContent = NotificationContent.CreateTwoIconsMask(Settings.MaskContent, PackIconKind.BellOutline, 0, false),
+                    OverlayContent = NotificationContent.CreateRollingTextContent(Settings.OverlayContent),
+                    RequestNotificationSettings =
+                    {
+                        IsSettingsEnabled = true,
+                        IsSpeechEnabled = Settings.IsSpeechEnabled,
+                        IsNotificationEffectEnabled = Settings.IsEffectEnabled,
+                        IsNotificationSoundEnabled = Settings.IsSoundEnabled,
+                        IsNotificationTopmostEnabled = Settings.IsTopmost
+                    }
+                };
+                ShowNotification(NotificationRequest);
+            }
+            catch
+            {
+                Logger.LogWarning("提醒设置文件加载失败，将忽略本次提醒请求。");
+            }
+        }
+        else
+        {
+            Logger.LogWarning("不存在的路径：\"{}\"，将忽略本次提醒请求。", dirValue);
+        }
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
