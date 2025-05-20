@@ -1,12 +1,12 @@
-using ClassIsland.Core.Abstractions;
-using ClassIsland.Core.Attributes;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using EasyNotification.Services.NotificationProviders;
-using ClassIsland.Core.Extensions.Registry;
+using System.IO;
 using EasyNotification.Models;
 using ClassIsland.Shared.Helpers;
-using System.IO;
+using ClassIsland.Core.Attributes;
+using Microsoft.Extensions.Hosting;
+using ClassIsland.Core.Abstractions;
+using ClassIsland.Core.Extensions.Registry;
+using Microsoft.Extensions.DependencyInjection;
+using EasyNotification.Services.NotificationProviders;
 
 namespace EasyNotification;
 

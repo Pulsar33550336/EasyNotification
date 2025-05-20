@@ -1,15 +1,14 @@
-﻿using ClassIsland.Core.Abstractions.Services;
-using Microsoft.Extensions.Hosting;
-using ClassIsland.Shared.Helpers;
-using System.Web;
-using Microsoft.Extensions.Logging;
+﻿using System.Web;
 using EasyNotification.Models;
-using ClassIsland.Core.Models.Notification;
 using MaterialDesignThemes.Wpf;
-using ClassIsland.Core.Abstractions.Services.NotificationProviders;
+using ClassIsland.Shared.Helpers;
 using ClassIsland.Core.Attributes;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using ClassIsland.Core.Models.Notification;
 using ClassIsland.Core.Models.UriNavigation;
-
+using ClassIsland.Core.Abstractions.Services;
+using ClassIsland.Core.Abstractions.Services.NotificationProviders;
 
 namespace EasyNotification.Services.NotificationProviders;
 
@@ -27,10 +26,10 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
         NotificationHostService = notificationHostService;
         NotificationHostService.RegisterNotificationProvider(this);
         Logger = logger;
-        uriNavigationService.HandlePluginsNavigation("easynotification/",Handler);
+        uriNavigationService.HandlePluginsNavigation("easynotification/",HandlerSimple);
     }
 
-    private void Handler(UriNavigationEventArgs args)
+    private void HandlerSimple(UriNavigationEventArgs args)
     {
         string query = args.Uri.Query;
         var queryParams = HttpUtility.ParseQueryString(query);
@@ -67,7 +66,7 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
     {
         var NotificationRequest = new NotificationRequest()
         {
-            MaskContent = NotificationContent.CreateSimpleTextContent(Settings.MaskContent),
+            MaskContent = NotificationContent.CreateTwoIconsMask(Settings.MaskContent,PackIconKind.BellOutline,0,false),
             OverlayContent = NotificationContent.CreateSimpleTextContent(Settings.OverlayContent),
             RequestNotificationSettings =
             {
@@ -77,7 +76,6 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
                 IsNotificationSoundEnabled = Settings.IsSoundEnabled,
                 IsNotificationTopmostEnabled = Settings.IsTopmost
             }
-
         };
         return NotificationRequest;
     }
