@@ -66,8 +66,14 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
                 Settings = ConfigureFileHelper.LoadConfigUnWrapped<Settings>(dirValue, false, false);
                 var NotificationRequest = new NotificationRequest()
                 {
-                    MaskContent = NotificationContent.CreateTwoIconsMask(Settings.MaskContent, PackIconKind.BellOutline, 0, false),
-                    OverlayContent = NotificationContent.CreateSimpleTextContent(Settings.OverlayContent),
+                    MaskContent = NotificationContent.CreateTwoIconsMask(Settings.MaskContent, PackIconKind.BellOutline, 0, false, x =>
+                    {
+                        x.Duration = TimeSpan.FromSeconds(Settings.MaskDuration);
+                    }),
+                    OverlayContent = NotificationContent.CreateSimpleTextContent(Settings.OverlayContent, x =>
+                    {
+                        x.Duration = TimeSpan.FromSeconds(Settings.OverlayDuration);
+                    }),
                     RequestNotificationSettings =
                     {
                         IsSettingsEnabled = true,
@@ -99,8 +105,10 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
                 Settings = ConfigureFileHelper.LoadConfigUnWrapped<Settings>(dirValue, false, false);
                 var NotificationRequest = new NotificationRequest()
                 {
-                    MaskContent = NotificationContent.CreateTwoIconsMask(Settings.MaskContent, PackIconKind.BellOutline, 0, false),
-                    OverlayContent = NotificationContent.CreateRollingTextContent(Settings.OverlayContent),
+                    MaskContent = NotificationContent.CreateTwoIconsMask(Settings.MaskContent, PackIconKind.BellOutline, 0, false, x => { 
+                        x.Duration = TimeSpan.FromSeconds(Settings.MaskDuration); 
+                    }),
+                    OverlayContent = NotificationContent.CreateRollingTextContent(Settings.OverlayContent,TimeSpan.FromSeconds(Settings.OverlayDuration)),
                     RequestNotificationSettings =
                     {
                         IsSettingsEnabled = true,
