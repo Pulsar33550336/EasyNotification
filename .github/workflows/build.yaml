@@ -1,0 +1,38 @@
+name: .NET CI
+
+on:
+  push:
+    branches: [ main ]
+    # Skip CI for docs and chore commits unless forced
+    if: "!(contains(github.event.head_commit.message, 'doc:') || contains(github.event.head_commit.message, 'chore:')) || contains(github.event.head_commit.message, '!forceCi')"
+  pull_request:
+    branches: [ main ]
+
+env:
+  DOTNET_VERSION: '8.0'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build -c Release
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-output
+        path: |
+          bin/Release/
+        retention-days: 7
