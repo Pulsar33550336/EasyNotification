@@ -130,12 +130,4 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
             Logger.LogWarning("不存在的路径：\"{}\"，将忽略本次提醒请求。", dirValue);
         }
     }
-
-    public async Task StartAsync(CancellationToken cancellationToken)
-    {
-    }
-
-    public async Task StopAsync(CancellationToken cancellationToken)
-    {
-    }
 }
