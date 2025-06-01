@@ -27,6 +27,7 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
         NotificationHostService.RegisterNotificationProvider(this);
         Logger = logger;
         uriNavigationService.HandlePluginsNavigation("easynotification/",Handler);
+        uriNavigationService.HandlePluginsNavigation("en/", Handler);
     }
 
     private void Handler(UriNavigationEventArgs args)
