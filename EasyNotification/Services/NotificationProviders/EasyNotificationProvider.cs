@@ -54,16 +54,17 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
             {
                 Logger.LogWarning("不存在的路径：\"{}\"，将忽略本次提醒请求。", dirValue);
             }
+            NotificationRequest NotificationRequest = new();
             switch (type) 
             {
                 case "simple":
-                    SimpleNotification(NotificationSettings); 
+                    NotificationRequest = SimpleNotification(NotificationSettings); 
                     break;
                 case "rolling":
-                    RollingNotification(NotificationSettings);
+                    NotificationRequest = RollingNotification(NotificationSettings);
                     break;
             }
-            
+            ShowNotification(NotificationRequest);
         }
         else
         {
@@ -72,7 +73,7 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
 
     }
     
-    private void SimpleNotification(NotificationSettings Settings)
+    private NotificationRequest SimpleNotification(NotificationSettings Settings)
     {
         var NotificationRequest = new NotificationRequest()
         {
@@ -93,10 +94,10 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
                 IsNotificationTopmostEnabled = Settings.IsTopmost
             }
         };
-        ShowNotification(NotificationRequest);
+        return NotificationRequest;
     }
 
-    private void RollingNotification(NotificationSettings Settings)
+    private NotificationRequest RollingNotification(NotificationSettings Settings)
     {
         var NotificationRequest = new NotificationRequest()
         {
@@ -113,7 +114,6 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
                 IsNotificationTopmostEnabled = Settings.IsTopmost
             }
         };
-        ShowNotification(NotificationRequest);
-           
+        return NotificationRequest;           
     }
 }
