@@ -16,8 +16,8 @@ public class Plugin : PluginBase
     public override void Initialize(HostBuilderContext context, IServiceCollection services)
     {
         //CommonDialog.ShowInfo("Hello world!");
-        Settings Settings = new();
+        NotificationSettings NotificationSettings = new();
         services.AddNotificationProvider<EasyNotificationProvider>();
-        ConfigureFileHelper.SaveConfig<Settings>(Path.Combine(PluginConfigFolder, "Example.json"), Settings);
+        ConfigureFileHelper.SaveConfig<NotificationSettings>(Path.Combine(PluginConfigFolder, "Example.json"), NotificationSettings);
     }
 }

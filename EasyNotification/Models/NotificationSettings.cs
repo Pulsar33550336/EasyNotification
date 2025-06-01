@@ -1,6 +1,6 @@
 ﻿namespace EasyNotification.Models;
 
-public class Settings
+public class NotificationSettings
 {
     private double _maskDuration = 5;
     private string _maskContent = "";
