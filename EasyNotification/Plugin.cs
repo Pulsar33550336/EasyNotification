@@ -7,6 +7,8 @@ using ClassIsland.Core.Abstractions;
 using ClassIsland.Core.Extensions.Registry;
 using Microsoft.Extensions.DependencyInjection;
 using EasyNotification.Services.NotificationProviders;
+using EasyNotification.Views.SettingsPages;
+using EasyNotification.Shared;
 
 namespace EasyNotification;
 
@@ -18,6 +20,8 @@ public class Plugin : PluginBase
         //CommonDialog.ShowInfo("Hello world!");
         NotificationSettings NotificationSettings = new();
         services.AddNotificationProvider<EasyNotificationProvider>();
+        services.AddSettingsPage<SettingsPage>();
         ConfigureFileHelper.SaveConfig<NotificationSettings>(Path.Combine(PluginConfigFolder, "Example.json"), NotificationSettings);
+        GlobalConstants.PluginConfigFolder = PluginConfigFolder;
     }
 }
