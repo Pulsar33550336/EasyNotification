@@ -18,11 +18,10 @@
       TextOptions.TextRenderingMode="Auto"
       d:DataContext="{d:DesignInstance local:SettingsPage}">
     <ScrollViewer DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SettingsPage}}">
-        <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
         <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}">
             <ci:SettingsCard IconGlyph="Password"
                              Header="Secret"
-                             Description="设置调用 Easynotificaion 时需要使用的 Secret，留空为禁用。">
+                             Description="设置调用 EasyNotificaion 时需要使用的 Secret，留空为禁用。">
                 <ci:SettingsCard.Switcher>
 
                     <WrapPanel>
