@@ -13,6 +13,8 @@ classisland://plugins/easynotification/?dir=[在这里填入你的 json 文件�
   - `rolling` : 滚动提醒
 - `secret` : 见设置中所述，如果禁用可不填该项。
 
+您可以将 `easynotification` 简写为 `en`，这两个 url 的调用效果一致。
+
 您可以在本插件的设置目录下找到示例文件。**注意：本文件每次启动时会被覆盖。**
 
 示例：
