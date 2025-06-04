@@ -10,7 +10,7 @@ public class Settings : ObservableRecipient
     {
         get { return _secret; }
         set {
-            if (value != _secret) return;
+            if (value == _secret) return;
             _secret = value;
             OnPropertyChanged();
         }

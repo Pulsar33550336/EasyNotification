@@ -24,18 +24,21 @@
                              Header="Secret"
                              Description="设置调用 Easynotificaion 时需要使用的 Secret，留空为禁用。">
                 <ci:SettingsCard.Switcher>
-                   
+
                     <WrapPanel>
                         <TextBox Grid.Column="5"
                              MinWidth="100"
                              MaxLength="20"
                              HorizontalContentAlignment="Left"
                              Margin="3,0,6,0"
-                             Text="{Binding Settings.Secret}"/>
-                        <Button Style="{StaticResource MaterialDesignFlatButton}" IsEnabled="{Binding ViewModel.IsBackingUp, Converter={StaticResource InvertBooleanConverter}}">
-                            <ci:IconText Kind="Shuffle" Text="随机"/>
+                             Text="{Binding Settings.Secret,Mode=TwoWay}"
+                             Visibility="{Binding ViewModel.Visible,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <Button Style="{StaticResource MaterialDesignFlatButton}" Click="Button_Click" Visibility="{Binding ViewModel.Visible,Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <ci:IconText Kind="Shuffle" Text="随机" />
                         </Button>
-
+                        <Button Style="{StaticResource MaterialDesignFlatButton}" Click="Visible_Click" Visibility="{Binding ViewModel.InVisible,Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <ci:IconText Kind="ShowOutline" Text="显示" />
+                        </Button>
                     </WrapPanel>
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>

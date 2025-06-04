@@ -9,6 +9,8 @@ using ClassIsland.Core.Models.Notification;
 using ClassIsland.Core.Models.UriNavigation;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Abstractions.Services.NotificationProviders;
+using EasyNotification.Shared;
+using System.IO;
 
 namespace EasyNotification.Services.NotificationProviders;
 
@@ -16,6 +18,7 @@ namespace EasyNotification.Services.NotificationProviders;
 public class EasyNotificationProvider : NotificationProviderBase, IHostedService
 {
 
+    private Settings Settings = new();
     public NotificationSettings NotificationSettings { get; set; } = new();
 
     private ILogger<EasyNotificationProvider> Logger;
@@ -26,8 +29,14 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
         NotificationHostService = notificationHostService;
         NotificationHostService.RegisterNotificationProvider(this);
         Logger = logger;
-        uriNavigationService.HandlePluginsNavigation("easynotification/",Handler);
+        uriNavigationService.HandlePluginsNavigation("easynotification/", Handler);
         uriNavigationService.HandlePluginsNavigation("en/", Handler);
+        Settings = ConfigureFileHelper.LoadConfig<Settings>(Path.Combine(GlobalConstants.PluginConfigFolder, "Settings.json"));
+        Settings.PropertyChanged += (sender, args) =>
+        {
+            ConfigureFileHelper.LoadConfig<Settings>(Path.Combine(GlobalConstants.PluginConfigFolder, "Settings.json"));
+
+        };
     }
 
     private void Handler(UriNavigationEventArgs args)
@@ -38,6 +47,7 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
         {
             string dirValue = queryParams["dir"] ?? "";
             string type = queryParams["type"] ?? "simple";
+            string secret = queryParams["secret"] ?? "";
             //Console.WriteLine(dirValue);
             Logger.LogDebug("传入的提醒配置文件路径为：\"{}\"", dirValue);
             if (System.IO.File.Exists(dirValue))
@@ -49,12 +59,25 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
                 catch
                 {
                     Logger.LogWarning("提醒设置文件加载失败，将忽略本次提醒请求。");
+                    return;
                 }
             }
             else
             {
                 Logger.LogWarning("不存在的路径：\"{}\"，将忽略本次提醒请求。", dirValue);
+                return;
             }
+
+            if(Settings.Secret != "")
+            {
+                if(secret != Settings.Secret)
+                {
+                    Logger.LogWarning("Secret 错误，将忽略本次提醒请求。");
+                    return;
+
+                }
+            }
+
             NotificationRequest NotificationRequest = new();
             switch (type) 
             {
@@ -70,6 +93,7 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
         else
         {
             Logger.LogWarning("无效的 Uri 参数：\"{}\"，将忽略本次提醒请求。", args.Uri);
+            return;
         }
 
     }
