@@ -21,7 +21,7 @@
         <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}">
             <ci:SettingsCard IconGlyph="Password"
                              Header="Secret"
-                             Description="设置调用 EasyNotificaion 时需要使用的 Secret，留空为禁用。">
+                             Description="设置调用 EasyNotification 时需要使用的 Secret，留空为禁用。">
                 <ci:SettingsCard.Switcher>
 
                     <WrapPanel>
