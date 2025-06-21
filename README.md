@@ -1,5 +1,9 @@
 # EasyNotification
 
+> [!Note]
+>
+> 由于本人地生中考+期末考，可能在7月前暂时没有时间进行开发
+
 一个简单的插件，可以通过 uri 协议与 json 文件调用 ClassIsland 的提醒功能。
 
 您可以调用以下 url 来触发提醒（前提是 ClassIsland 注册了 uri 协议）：
