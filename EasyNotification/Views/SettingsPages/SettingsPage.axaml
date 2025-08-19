@@ -1,0 +1,38 @@
+﻿<ci:SettingsPageBase xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:EasyNotification.Views.SettingsPages"
+             xmlns:ci="http://classisland.tech/schemas/xaml/core"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+             xmlns:controls1="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
+             mc:Ignorable="d"
+             Design.Width="960" Design.Height="500"
+             FontWeight="Regular"
+             FontSize="14"
+             x:Class="EasyNotification.Views.SettingsPages.SettingsPage">
+    <ScrollViewer DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SettingsPage}}">
+        <StackPanel Classes="settings-container animated-intro">
+            <controls:SettingsExpander IconSource="{ci:FluentIconSource &#xEAB0;}"
+                                       Header="Secret"
+                                       Description="设置调用 EasyNotification 时需要使用的 Secret，留空为禁用。">
+                <controls:SettingsExpander.Footer>
+                    <WrapPanel>
+                        <TextBox MinWidth="100"
+                               MaxLength="20"
+                               HorizontalContentAlignment="Left"
+                               Margin="3,0,6,0"
+                               Text="{Binding Settings.Secret, Mode=TwoWay}"
+                               IsVisible="{Binding ViewModel.Visible}"/>
+                        <Button Classes="accent" Click="Button_Click" IsVisible="{Binding ViewModel.Visible}">
+                            <controls1:IconText Glyph="&#xE064;" Text="随机" />
+                        </Button>
+                        <Button Classes="accent" Click="Visible_Click" IsVisible="{Binding ViewModel.InVisible}">
+                            <controls1:IconText Glyph="&#xE065;" Text="显示" />
+                        </Button>
+                    </WrapPanel>
+                </controls:SettingsExpander.Footer>
+            </controls:SettingsExpander>
+        </StackPanel>
+    </ScrollViewer>
+</ci:SettingsPageBase>

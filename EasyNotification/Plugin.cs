@@ -23,5 +23,6 @@ public class Plugin : PluginBase
         services.AddSettingsPage<SettingsPage>();
         ConfigureFileHelper.SaveConfig<NotificationSettings>(Path.Combine(PluginConfigFolder, "Example.json"), NotificationSettings);
         GlobalConstants.PluginConfigFolder = PluginConfigFolder;
+        
     }
 }

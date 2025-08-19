@@ -1,6 +1,6 @@
 ﻿using System.Web;
 using EasyNotification.Models;
-using MaterialDesignThemes.Wpf;
+//using MaterialDesignThemes.Wpf;
 using ClassIsland.Shared.Helpers;
 using ClassIsland.Core.Attributes;
 using Microsoft.Extensions.Hosting;
@@ -14,7 +14,7 @@ using System.IO;
 
 namespace EasyNotification.Services.NotificationProviders;
 
-[NotificationProviderInfo("AB67DC23-BEA9-40B7-912B-C7C37390A171", "EasyNotification", PackIconKind.BellPlus, "由 EasyNotification 注册的提醒提供方，支持由 url 协议触发提醒。")]
+[NotificationProviderInfo("AB67DC23-BEA9-40B7-912B-C7C37390A171", "EasyNotification",  "\ue02f", "由 EasyNotification 注册的提醒提供方，支持由 url 协议触发提醒。")]
 public class EasyNotificationProvider : NotificationProviderBase, IHostedService
 {
 
@@ -37,6 +37,7 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
             ConfigureFileHelper.LoadConfig<Settings>(Path.Combine(GlobalConstants.PluginConfigFolder, "Settings.json"));
 
         };
+
     }
 
     private void Handler(UriNavigationEventArgs args)
@@ -102,7 +103,7 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
     {
         var NotificationRequest = new NotificationRequest()
         {
-            MaskContent = NotificationContent.CreateTwoIconsMask(Settings.MaskContent, PackIconKind.BellOutline, 0, false, x =>
+            MaskContent = NotificationContent.CreateTwoIconsMask(Settings.MaskContent, " ", " ", false, x =>
             {
                 x.Duration = TimeSpan.FromSeconds(Settings.MaskDuration);
             }),
@@ -126,7 +127,7 @@ public class EasyNotificationProvider : NotificationProviderBase, IHostedService
     {
         var NotificationRequest = new NotificationRequest()
         {
-            MaskContent = NotificationContent.CreateTwoIconsMask(Settings.MaskContent, PackIconKind.BellOutline, 0, false, x => { 
+            MaskContent = NotificationContent.CreateTwoIconsMask(Settings.MaskContent, " ", " ", false, x => { 
                 x.Duration = TimeSpan.FromSeconds(Settings.MaskDuration); 
             }),
             OverlayContent = NotificationContent.CreateRollingTextContent(Settings.OverlayContent,TimeSpan.FromSeconds(Settings.OverlayDuration)),

@@ -4,33 +4,39 @@ using ClassIsland.Core.Enums.SettingsWindow;
 using ClassIsland.Shared.Helpers;
 using EasyNotification.Models;
 using EasyNotification.Shared;
-using MaterialDesignThemes.Wpf;
+using Avalonia.Interactivity;
 using System;
 using System.ComponentModel;
 using System.IO;
+using ClassIsland.Core.Abstractions.Services;
 using EasyNotification.ViewModel;
 
 namespace EasyNotification.Views.SettingsPages;
 
-[SettingsPageInfo("easynotification.settingpage", "EasyNotification", PackIconKind.BellPlusOutline, PackIconKind.BellPlus, SettingsPageCategory.External)]
+[SettingsPageInfo("easynotification.settingpage", "EasyNotification", "\ue02f", "\ue02e",
+    SettingsPageCategory.External)]
 public partial class SettingsPage : SettingsPageBase
 {
     public Settings Settings { get; set; } = new();
 
     public SettingsPageViewModel ViewModel { get; } = new();
-
-    public SettingsPage()
+    
+    private IUriNavigationService UriNS;
+    public SettingsPage(IUriNavigationService uriNavigationService)
     {
-        
-        Settings = ConfigureFileHelper.LoadConfig<Settings>(Path.Combine(GlobalConstants.PluginConfigFolder, "Settings.json"));
+
+        Settings = ConfigureFileHelper.LoadConfig<Settings>(Path.Combine(GlobalConstants.PluginConfigFolder,
+            "Settings.json"));
         Settings.PropertyChanged += (sender, args) =>
         {
-            ConfigureFileHelper.SaveConfig<Settings>(Path.Combine(GlobalConstants.PluginConfigFolder, "Settings.json"), Settings);
+            ConfigureFileHelper.SaveConfig<Settings>(
+                Path.Combine(GlobalConstants.PluginConfigFolder, "Settings.json"), Settings);
         };
         InitializeComponent();
+        UriNS = uriNavigationService;
     }
 
-    private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+    private void Button_Click(object sender, RoutedEventArgs e)
     {
         Random random = new();
         string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -39,10 +45,11 @@ public partial class SettingsPage : SettingsPageBase
         {
             stringChars[i] = chars[random.Next(chars.Length)];
         }
+
         Settings.Secret = new(stringChars);
     }
 
-    private void Visible_Click(object sender, System.Windows.RoutedEventArgs e)
+    private void Visible_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.Visible = true;
         ViewModel.InVisible = false;
