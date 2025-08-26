@@ -1,13 +1,13 @@
 name: build plugin
 
 on:
-  push:
-    branches: [ master ]
-    tags: [ '*' ]   # 推送任意 tag 也会触发
-  pull_request:
-    branches: [ master ]
   workflow_dispatch:
-
+    inputs:
+      tag:
+        description: '要构建的 tag'
+        required: true
+        default: ''
+        
 env:
   DOTNET_VERSION: '8.0'
 
@@ -16,7 +16,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+    # Checkout 指定 tag，如果为空就用默认 branch
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.inputs.tag || 'master' }}
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -42,28 +46,3 @@ jobs:
         name: EasyNotification-checksums
         path: EasyNotification/cipx/checksums.md
         retention-days: 7
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
-
-    steps:
-    - name: Download cipx artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: EasyNotification-plugin
-        path: .
-
-    - name: Download checksums
-      uses: actions/download-artifact@v4
-      with:
-        name: EasyNotification-checksums
-        path: .
-
-    - name: Create GitHub Release
-      uses: softprops/action-gh-release@v2
-      with:
-        draft: true
-        files: EasyNotification.cipx
-        body_path: checksums.md
