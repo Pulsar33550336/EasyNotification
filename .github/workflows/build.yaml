@@ -2,7 +2,9 @@ name: build plugin
 
 on:
   push:
+    branches: [ master ]
   pull_request:
+    branches: [ master ]
   workflow_dispatch:
 
 env:
@@ -23,13 +25,13 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Build
-      run: dotnet build -c Release
+    - name: Publish plugin (with cipx package)
+      run: dotnet publish -c Release -p:CreateCipx=true
 
-    - name: Upload artifacts
+    - name: Upload cipx artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: build-output
+        name: plugin-cipx
         path: |
-          EasyNotification/bin/Release
+          **/cipx
         retention-days: 7
